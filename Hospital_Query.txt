@@ -16,7 +16,6 @@ DROP TABLE IF EXISTS examinations;
 
 
 
-
 ---------- CREATE TABLES ----------
 
 CREATE TABLE departments (
@@ -111,7 +110,8 @@ INSERT INTO doctors (name, surname, premium, salary) VALUES
   ('Anthony', 'Davis', 1300.00, 6000.00),
   ('Joshua', 'Bell', 1500.00, 6000.00),
   ('Michael', 'Johnson', 2000.00, 7000.00),
-  ('Thomas', 'Gerada', 1200.00, 5500.00);
+  ('Thomas', 'Gerada', 1200.00, 5500.00),
+  ('John', 'Doe', 1800.00, 6500.00);
 
 -- Examinations
 INSERT INTO examinations (name) VALUES
