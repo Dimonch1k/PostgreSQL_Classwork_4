@@ -1,7 +1,7 @@
 
 
 
-------------------------------------------------------------------- Request 0 -------------------------------------------------------------------
+------------------------------------------------------------------- Task 0 -------------------------------------------------------------------
 
 -- Resquest 1
 -- Вивести кількість палат, місткість яких більша за 10.
@@ -121,7 +121,7 @@
 
 
 
-------------------------------------------------------------------- Request 1 -------------------------------------------------------------------
+------------------------------------------------------------------- Task 1 -------------------------------------------------------------------
 
 -- Request 1
 -- Вивести назви відділень, що знаходяться у тому ж корпусі, що й відділення “Cardiology”.
@@ -247,7 +247,7 @@
 -- FROM doctors_examinations AS d_e
 -- JOIN doctors AS dos
   -- ON d_e.doctor_id = dos.id
--- JOIN examinations AS exs
+-- JOIN examinations AS exsd
   -- ON d_e.examination_id = exs.id
 -- WHERE d_e.start_time <= '12:00' AND d_e.end_time >= '15:00'
 -- ORDER BY d_e.start_time;
@@ -256,7 +256,7 @@
 
 
 
-------------------------------------------------------------------- Request 2 -------------------------------------------------------------------
+------------------------------------------------------------------- Task 2 -------------------------------------------------------------------
 
 
 -- Request 1
@@ -281,13 +281,14 @@
 -- Request 2
 -- Вивести назви відділень, у яких проводилося хоча б одне обстеження за останній тиждень.
 
--- SELECT DISTINCT des.name 
--- FROM doctors_examinations AS d_e
--- JOIN wards AS w
--- ON d_e.ward_id = w.id
--- JOIN departments AS des
--- ON w.department_id = des.id
--- WHERE (NOW() - d_e.ex_date) < '7 days';
+ --SELECT DISTINCT des.name 
+ --FROM doctors_examinations AS d_e
+ --JOIN wards AS w
+ --ON d_e.ward_id = w.id
+ --JOIN departments AS des
+ --ON w.department_id = des.id
+ --WHERE (GETDATE() - d_e.ex_date) < '7 days';
+
 
 
 
@@ -295,13 +296,13 @@
 -- Вивести назви захворювань, для яких не проводяться обстеження.
 
 -- SELECT dis.name
--- FROM diseases AS dis
+-- FROM diseases as dis
 -- WHERE dis.id NOT IN (
-   -- SELECT dis.id
-   -- FROM doctors_examinations AS d_e
-   -- JOIN diseases AS dis
-    -- ON d_e.disease_id = dis.id
-   -- GROUP BY dis.id);
+--    SELECT dis.id
+--    FROM doctors_examinations AS d_e
+--    JOIN diseases AS dis
+--     ON d_e.disease_id = dis.id
+--    GROUP BY dis.id);
 
 
 
@@ -328,13 +329,13 @@
 -- SELECT des.name AS dep_name
 -- FROM departments AS des
 -- WHERE des.id NOT IN (
-   -- SELECT des.id
-   -- FROM doctors_examinations AS d_e
-   -- JOIN wards AS ws
-    -- ON d_e.ward_id = ws.id
-   -- JOIN departments AS des
-	-- ON ws.department_id = des.id
-   -- GROUP BY des.id);
+--    SELECT des.id
+--    FROM doctors_examinations AS d_e
+--    JOIN wards AS ws
+--     ON d_e.ward_id = ws.id
+--    JOIN departments AS des
+--	 ON ws.department_id = des.id
+--    GROUP BY des.id);
 
 
 
@@ -344,10 +345,10 @@
 -- SELECT ds.name AS doctor_name
 -- FROM doctors AS ds
 -- WHERE ds.id IN (
-   -- SELECT ins.doctor_id
-   -- FROM interns AS ins
-   -- JOIN doctors AS ds
-    -- ON ins.doctor_id = ds.id);
+--    SELECT ins.doctor_id
+--    FROM interns AS ins
+--    JOIN doctors AS ds
+--     ON ins.doctor_id = ds.id);
 
 
 
@@ -357,14 +358,14 @@
 -- SELECT ds.surname AS intern_surname
 -- FROM doctors as ds
 -- WHERE ds.id IN (
-   -- SELECT ins.doctor_id
-   -- FROM interns AS ins
-   -- JOIN doctors AS ds
-    -- ON ins.doctor_id = ds.id)
- -- AND ds.salary > (
-   -- SELECT MIN(salary)
-   -- FROM doctors);
-   
+--    SELECT ins.doctor_id
+--    FROM interns AS ins
+--    JOIN doctors AS ds
+--     ON ins.doctor_id = ds.id)
+--  AND ds.salary > (
+--    SELECT MIN(salary)
+--    FROM doctors);
+--   
 -- SELECT name, salary
 -- FROM doctors;
    
@@ -379,23 +380,23 @@
 -- SELECT ws.name, ws.places
 -- FROM wards AS ws
 -- WHERE ws.id NOT IN (
-   -- SELECT ws.id
-   -- FROM wards AS ws
-   -- JOIN departments AS des
-    -- ON ws.department_id = des.id
-   -- WHERE des.building = 3)
- -- AND ws.places > (
-   -- SELECT MAX(ws.places)
-   -- FROM wards AS ws
-   -- JOIN departments AS des
-    -- ON ws.department_id = des.id
-   -- WHERE des.building = 3
-   -- );
+--    SELECT ws.id
+--    FROM wards AS ws
+--    JOIN departments AS des
+--     ON ws.department_id = des.id
+--    WHERE des.building = 3)
+--  AND ws.places > (
+--    SELECT MAX(ws.places)
+--    FROM wards AS ws
+--    JOIN departments AS des
+--     ON ws.department_id = des.id
+--    WHERE des.building = 3
+--    );
 
 -- SELECT ws.name, ws.places, des.name, des.building
 -- FROM wards AS ws
 -- JOIN departments AS des
- -- ON ws.department_id = des.id
+--  ON ws.department_id = des.id
 -- ORDER BY ws.places desc;
 
 
@@ -403,19 +404,43 @@
 -- Request 9
 -- Вивести прізвища лікарів, які проводять обстеження у відділеннях “Ophthalmology” та “Physiotherapy”.
 
-SELECT surname
-FROM doctors
-WHERE id IN (
-   SELECT ds.id
-   FROM doctors_examinations AS d_e
-   JOIN doctors AS ds
-    ON d_e.doctor_id = ds.id
-   
+-- SELECT surname
+-- FROM doctors
+-- WHERE id IN (
+--    SELECT ds.id
+--    FROM doctors_examinations AS d_e
+--    JOIN doctors AS ds
+--     ON d_e.doctor_id = ds.id
 
 
 
 -- Request 10
 -- Вивести назви відділень, у яких працюють інтерни та професори.
+
+-- SELECT * 
+-- FROM departments AS des
+-- WHERE des.id IN (
+-- 	 SELECT des.id 
+--      FROM doctors_examinations AS d_e
+--      JOIN wards AS w
+--        ON d_e.ward_id = w.id
+--      JOIN departments AS des
+--        ON w.department_id = des.id
+--      JOIN doctors AS dos
+--        ON d_e.doctor_id = dos.id
+--      JOIN interns AS ins
+--        ON ins.doctor_id = dos.id)
+-- 	AND des.id IN (
+-- 	 SELECT des.id 
+--      FROM doctors_examinations AS d_e
+--      JOIN wards AS w
+--        ON d_e.ward_id = w.id
+--      JOIN departments AS des
+--        ON w.department_id = des.id
+--      JOIN doctors AS dos
+--        ON d_e.doctor_id = dos.id
+--      JOIN professors AS ps
+--        ON ps.doctor_id = dos.id);
 
 
 
@@ -424,7 +449,15 @@ WHERE id IN (
 -- Вивести повні імена лікарів та відділення у яких вони проводять обстеження,
 -- якщо відділення має фонд фінансування понад 20000.
 
-
+-- SELECT CONCAT(dos.name, ' ', dos.surname) AS doctor, des.name AS department
+-- FROM doctors_examinations AS d_e
+-- JOIN doctors AS dos
+--   ON d_e.doctor_id = dos.id
+-- JOIN wards AS ws
+--   ON d_e.ward_id = ws.id
+-- JOIN departments AS des
+--   ON ws.department_id = des.id
+-- WHERE des.financing >= 20000;
 
 
 
@@ -432,8 +465,28 @@ WHERE id IN (
 -- Вивести назву відділення, в якому проводить обстеження лікар із найбільшою ставкою. Вивести
 -- назви палат, чия місткість більша, ніж місткість кожної палати, що знаходиться в 3-му корпусі.
 
+--  SELECT dos.name AS doctor, des.name AS department
+--  FROM doctors_examinations AS d_e
+--  JOIN doctors AS dos
+--    ON d_e.doctor_id = dos.id
+--  JOIN wards AS ws
+--    ON d_e.ward_id = ws.id
+--  JOIN departments AS des
+--    ON ws.department_id = des.id
+--  WHERE dos.salary = (
+--  	SELECT MAX(salary)
+--  	FROM doctors
+--  	);
 
 
 
 -- Request 13
 -- Вивести назви захворювань та кількість проведених за ними обстежень.
+
+-- SELECT dis.name AS disease, COUNT(exs.id) AS count_examinations
+-- FROM doctors_examinations AS d_e
+-- JOIN diseases AS dis
+--   ON d_e.disease_id = dis.id
+-- JOIN examinations as exs
+--   ON d_e.examination_id = exs.id
+-- GROUP BY dis.name
